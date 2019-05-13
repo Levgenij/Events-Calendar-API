@@ -5,6 +5,7 @@ import {getAuthenticatedUser} from '../tasks/index'
 import GoogleProvider from '../services/GoogleProvider'
 import moment from 'moment-timezone'
 import Errors from 'restify-errors'
+import config from '../config/index'
 
 /**
  * List all events
@@ -73,8 +74,8 @@ export const create = async (request, response, next) => {
   const event = await Event.create({
     user_id: user.id,
     title: title,
-    start_at: start_at,
-    end_at: end_at,
+    start_at: moment(start_at).format(config.databaseDateTimeFormat),
+    end_at: moment(end_at).format(config.databaseDateTimeFormat),
     social_id: socialEvent.id
   })
   
@@ -121,7 +122,13 @@ export const update = async (request, response, next) => {
     }
   })
   
-  const freshEvent = await Event.update(request.body, {
+  const freshEvent = await Event.update({
+    user_id: user.id,
+    title: title,
+    start_at: moment(start_at).format(config.databaseDateTimeFormat),
+    end_at: moment(end_at).format(config.databaseDateTimeFormat),
+    social_id: socialEvent.id
+  }, {
     where: {
       id: eventId
     }

@@ -24,5 +24,7 @@ export default {
       id: '657226011143-7hg089raq5afv7bnuudeo6v60fhb1dn8.apps.googleusercontent.com',
       secret: 'Uuj6DE367CWHp_rMLdrviOQN'
     }
-  }
+  },
+
+  databaseDateTimeFormat: 'YYYY-MM-DD HH:mm:ss'
 }
