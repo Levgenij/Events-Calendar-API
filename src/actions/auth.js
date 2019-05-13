@@ -92,7 +92,7 @@ const makeAccessToken = (user) => {
  * @param user
  */
 const fetchEvents = (provider, user) => {
-  provider.events().then(({data}) => {
+  return provider.events().then(({data}) => {
     const events = data.items.map(event => {
       return {
         user_id: user.id,
@@ -148,7 +148,9 @@ export const signIn = async (request, response, next) => {
 
   const freshUser = await resolveFreshUser(user, socialUser, googleTokenData.access_token, googleTokenData.refresh_token || '')
 
-  if (!user) fetchEvents(provider, freshUser)
+  if (!user) {
+    await fetchEvents(provider, freshUser)
+  }
 
   const token = makeAccessToken(freshUser)
 
