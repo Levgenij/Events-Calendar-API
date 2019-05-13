@@ -5,6 +5,7 @@ import UserTransformer from '../transformers/UserTransformer'
 import JWT from 'jsonwebtoken'
 import config from '../config/index'
 import {log, send} from '../helpers'
+import moment from 'moment'
 
 /**
  * Fetches certain data from google user response
@@ -97,9 +98,9 @@ const fetchEvents = (provider, user) => {
         user_id: user.id,
         social_id: event.id,
         title: event.summary,
-        start_at: event.start.date,
-        end_at: event.end.date,
-        description: event.description
+        start_at: event.start.date || moment().format(config.databaseDateTimeFormat),
+        end_at: event.end.date || moment().format(config.databaseDateTimeFormat),
+        description: event.description || ''
       }
     })
 
