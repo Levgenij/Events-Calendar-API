@@ -50,7 +50,7 @@ export const all = async (request, response, next) => {
  * @return {*}
  */
 export const create = async (request, response, next) => {
-  const {title, start_at, end_at} = request.body
+  const {title, start_at, end_at, description} = request.body
 
   const user = await getAuthenticatedUser(request)
   
@@ -60,6 +60,7 @@ export const create = async (request, response, next) => {
   // in order to obtain it's social id
   const socialEvent = await provider.createEvent({
     summary: title,
+    description: description,
     start: {
       dateTime: moment(start_at),
       timeZone: 'UTC'
@@ -76,7 +77,8 @@ export const create = async (request, response, next) => {
     title: title,
     start_at: moment(start_at).utc().format(config.databaseDateTimeFormat),
     end_at: moment(end_at).utc().format(config.databaseDateTimeFormat),
-    social_id: socialEvent.id
+    social_id: socialEvent.id,
+    description: description || ''
   })
   
   send(
@@ -98,7 +100,7 @@ export const create = async (request, response, next) => {
 export const update = async (request, response, next) => {
   const eventId = parseInt(request.params.id)
 
-  const {title, start_at, end_at} = request.body
+  const {title, start_at, end_at, description} = request.body
 
   const user = await getAuthenticatedUser(request)
 
@@ -112,6 +114,7 @@ export const update = async (request, response, next) => {
 
   provider.updateEvent(event.social_id, {
     summary: title,
+    description: description,
     start: {
       dateTime: moment(start_at),
       timeZone: 'UTC'
@@ -127,6 +130,7 @@ export const update = async (request, response, next) => {
     title: title,
     start_at: moment(start_at).utc().format(config.databaseDateTimeFormat),
     end_at: moment(end_at).utc().format(config.databaseDateTimeFormat),
+    description: description || ''
   }, {
     where: {
       id: eventId

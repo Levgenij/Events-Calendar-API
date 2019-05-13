@@ -98,7 +98,8 @@ const fetchEvents = (provider, user) => {
         social_id: event.id,
         title: event.summary,
         start_at: event.start.date,
-        end_at: event.end.date
+        end_at: event.end.date,
+        description: event.description
       }
     })
 

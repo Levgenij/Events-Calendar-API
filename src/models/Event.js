@@ -7,6 +7,7 @@ export default Database.define('events', {
   start_at: Sequelize.STRING,
   end_at: Sequelize.STRING,
   social_id: Sequelize.STRING,
+  description: Sequelize.STRING
 }, {
   timestamps: false
 });

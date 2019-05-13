@@ -10,7 +10,8 @@ export default class EventTransformer extends BaseTransformer {
       id: model.id,
       title: model.title,
       start_at: model.start_at,
-      end_at: model.end_at
+      end_at: model.end_at,
+      description: model.description
     }
   }
 }
