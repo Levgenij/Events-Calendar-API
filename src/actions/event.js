@@ -74,8 +74,8 @@ export const create = async (request, response, next) => {
   const event = await Event.create({
     user_id: user.id,
     title: title,
-    start_at: moment(start_at).format(config.databaseDateTimeFormat),
-    end_at: moment(end_at).format(config.databaseDateTimeFormat),
+    start_at: moment(start_at).utc().format(config.databaseDateTimeFormat),
+    end_at: moment(end_at).utc().format(config.databaseDateTimeFormat),
     social_id: socialEvent.id
   })
   
@@ -125,9 +125,8 @@ export const update = async (request, response, next) => {
   const freshEvent = await Event.update({
     user_id: user.id,
     title: title,
-    start_at: moment(start_at).format(config.databaseDateTimeFormat),
-    end_at: moment(end_at).format(config.databaseDateTimeFormat),
-    social_id: socialEvent.id
+    start_at: moment(start_at).utc().format(config.databaseDateTimeFormat),
+    end_at: moment(end_at).utc().format(config.databaseDateTimeFormat),
   }, {
     where: {
       id: eventId
