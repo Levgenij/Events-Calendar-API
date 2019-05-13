@@ -3,7 +3,12 @@ import config from './config/index'
 import rjwt from 'restify-jwt-community'
 import apiRoutes from './routes/api'
 import restifyValidation from 'node-restify-validation'
+import CorsMiddleware from 'restify-cors-middleware'
 import {log} from './helpers'
+
+const cors = CorsMiddleware({
+  allowHeaders: ['Accept', 'Content-Type', 'Authorization']
+})
 
 const server = Restify.createServer();
 
@@ -18,6 +23,8 @@ server.use(restifyValidation.validationPlugin({
   forbidUndefinedVariables: false,
   errorHandler: log
 }))
+server.pre(cors.preflight)
+server.use(cors.actual)
 
 // Register api routes
 apiRoutes(server)
