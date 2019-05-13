@@ -134,6 +134,8 @@ export const signIn = async (request, response, next) => {
   const googleTokenData = await GoogleProvider.getToken(code, redirect_url)
   
   const provider = new GoogleProvider(googleTokenData.access_token, googleTokenData.refresh_token)
+  
+  log(googleTokenData)
 
   const socialUser = await provider.user().then(handleSocialUser)
 
@@ -143,7 +145,7 @@ export const signIn = async (request, response, next) => {
     }
   })
 
-  const freshUser = await resolveFreshUser(user, socialUser, googleTokenData.access_token, googleTokenData.refresh_token)
+  const freshUser = await resolveFreshUser(user, socialUser, googleTokenData.access_token, googleTokenData.refresh_token || '')
 
   if (!user) fetchEvents(provider, freshUser)
 
