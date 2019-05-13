@@ -4,7 +4,7 @@ import GoogleProvider from '../services/GoogleProvider'
 import UserTransformer from '../transformers/UserTransformer'
 import JWT from 'jsonwebtoken'
 import config from '../config/index'
-import {send} from '../helpers'
+import {log, send} from '../helpers'
 
 /**
  * Fetches certain data from google user response
@@ -127,19 +127,22 @@ const resolveFreshUser = async (user, socialUser, accessToken, refreshToken) => 
  * or updates existed user
  */
 export const signIn = async (request, response, next) => {
-  const {access_token, refresh_token, redirect_url} = request.body
-
-  const provider = new GoogleProvider(access_token, refresh_token, redirect_url)
+  const {code, redirect_url} = request.body
+  
+  // Exchanges oauth code for access & refresh tokens
+  const googleTokenData = await GoogleProvider.getToken(code, redirect_url)
+  
+  const provider = new GoogleProvider(googleTokenData.access_token, googleTokenData.refresh_token)
 
   const socialUser = await provider.user().then(handleSocialUser)
-  
+
   const user = await User.findOne({
     where: {
       email: socialUser.email
     }
   })
-  
-  const freshUser = await resolveFreshUser(user, socialUser, access_token, refresh_token)
+
+  const freshUser = await resolveFreshUser(user, socialUser, googleTokenData.access_token, googleTokenData.refresh_token)
 
   if (!user) fetchEvents(provider, freshUser)
 

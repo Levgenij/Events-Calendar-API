@@ -15,18 +15,47 @@ const credentials = config.services.google
  */
 export default class GoogleProvider {
   constructor (accessToken, refreshToken, redirectUrl = null) {
-    this.accessToken = accessToken
-
     this.client = new google.auth.OAuth2(credentials.id, credentials.secret, redirectUrl)
 
-    this.client.setCredentials({
-      access_token: this.accessToken,
-      refresh_token: refreshToken
-    })
+    this.setTokens(accessToken, refreshToken)
 
     this.calendarId = 'primary'
   }
   
+  /**
+   * Set token to client
+   * @param accessToken
+   * @param refreshToken
+   */
+  setTokens (accessToken, refreshToken) {
+    this.client.setCredentials({
+      access_token: accessToken,
+      refresh_token: refreshToken
+    })
+  }
+  
+  /**
+   * Changes auth code for access && refresh tokens
+   *
+   * @param code
+   * @param redirectUrl
+   */
+  static getToken (code, redirectUrl) {
+    let client = new google.auth.OAuth2(credentials.id, credentials.secret, redirectUrl)
+
+    return new Promise((resolve, reject) => {
+      client.getToken(code, (error, response) => {
+        if (error) {
+          log('GoogleProvider.getToken()', error)
+          
+          return reject(new Error('Failed to exchange code for access token'))
+        }
+
+        resolve(response)
+      })
+    })
+  }
+
   /**
    * Resolves google's calendar api
    *
