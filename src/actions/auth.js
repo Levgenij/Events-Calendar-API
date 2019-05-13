@@ -72,7 +72,7 @@ const updateUser = (originalUser, socialUser, accessToken, refreshToken) => {
  */
 const makeAccessToken = (user) => {
   const token = JWT.sign({id: user.id, email: user.email}, config.auth.secret, {
-    expiresIn: '15m' // token expires in 15 minutes
+    expiresIn: '2d' // token expires in 2 days
   })
 
   const { iat, exp } = JWT.decode(token)
