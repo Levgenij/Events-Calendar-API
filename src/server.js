@@ -22,6 +22,6 @@ server.use(restifyValidation.validationPlugin({
 // Register api routes
 apiRoutes(server)
 
-server.listen(8080, function () {
+server.listen(8888, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
